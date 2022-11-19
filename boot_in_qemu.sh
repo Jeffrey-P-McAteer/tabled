@@ -29,6 +29,11 @@ mkdir -p target/vm/efi_boot_contents/
 
 cp ./target/$TARGET/release/tabled-efi-boot.efi target/vm/efi_boot_contents/tabled-efi-boot.efi
 
+# Rename it to match some common firmware lookup locations
+mkdir -p target/vm/efi_boot_contents/EFI/BOOT
+cp target/vm/efi_boot_contents/tabled-efi-boot.efi target/vm/efi_boot_contents/EFI/BOOT/BOOTX64.EFI
+
+
 QEMU_VM_BIN=qemu-system-x86_64
 case $TARGET in
     x86_64-unknown-uefi) QEMU_VM_BIN='qemu-system-x86_64' ;;
@@ -36,7 +41,12 @@ case $TARGET in
     *) echo "No known QEMU system binary for $TARGET, cannot boot VM" ; exit 1 ;;
 esac
 
+echo ''
+echo ''
 echo 'Ctrl+Alt+G to escape VM'
+echo ''
+echo ''
+
 
 $QEMU_VM_BIN -enable-kvm \
     -drive if=pflash,format=raw,readonly=on,file=target/vm/OVMF_CODE.fd \
