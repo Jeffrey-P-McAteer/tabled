@@ -1,0 +1,6 @@
+[workspace]
+
+members = [
+  "tabled-efi-boot",
+  # "tabled-kernel",
+]

@@ -1,0 +1,12 @@
+[package]
+name = "tabled-efi-boot"
+version = "0.1.0"
+edition = "2021"
+authors = [
+  "Jeffrey McAteer <jeffrey.p.mcateer@gmail.com>"
+]
+
+[dependencies]
+log = "0.4"
+uefi = "0.18"
+uefi-services = "0.15"
