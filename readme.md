@@ -19,8 +19,12 @@ _A kernel designed around SQLite tables instead of filesystems_
     - Load verified 3rd-party driver code
     - Load un-verified 3rd-party driver code as a WASM blob
         - Essentially allowing any 3rd-party code, but badly-written code will get a performance hit. Proven code may be loaded w/o any safety/permissions checks, assuming the validator can be trusted.
+    - Un-verified (or partially-verified) programs should be partially load/executable.
+        - That is, given some high-level goals and an executable graph of some code,
+          run enough of the code to perform the goals without executing unecessary branches.
+        - This will (long-term) be used to analyze other EFI programs and/or kernels to extract drivers by way of
+          observing the other kernel's executable traces, making new hardware support trivial.
     - All hardware drivers communicate through in-memory database tables
-    - 
 
 
 # Non-Goals

@@ -27,11 +27,10 @@ fi
 
 mkdir -p target/vm/efi_boot_contents/
 
-cp ./target/$TARGET/release/tabled-efi-boot.efi target/vm/efi_boot_contents/tabled-efi-boot.efi
-
-# Rename it to match some common firmware lookup locations
 mkdir -p target/vm/efi_boot_contents/EFI/BOOT
-cp target/vm/efi_boot_contents/tabled-efi-boot.efi target/vm/efi_boot_contents/EFI/BOOT/BOOTX64.EFI
+
+# Matches what most firmware looks for to execute by default
+cp ./target/$TARGET/release/tabled-efi-boot.efi target/vm/efi_boot_contents/EFI/BOOT/BOOTX64.EFI
 
 
 QEMU_VM_BIN=qemu-system-x86_64
