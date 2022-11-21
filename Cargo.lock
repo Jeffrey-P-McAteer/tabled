@@ -68,6 +68,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "tabled-kernel"
+version = "0.1.0"
+dependencies = [
+ "log",
+ "uefi",
+ "uefi-services",
+]
+
+[[package]]
 name = "ucs2"
 version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
