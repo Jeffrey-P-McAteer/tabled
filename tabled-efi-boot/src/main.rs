@@ -35,6 +35,12 @@ fn main(_image_handle: Handle, mut system_table: SystemTable<Boot>) -> Status {
       println!();
     }
 
+    // Can we detect CPU cores/ram amount? Enumerate disks?
+
+    let mm = system_table.boot_services().memory_map_size();
+    println!("RAM> entry_size={}, map_size={} ", mm.entry_size, mm.map_size);
+
+
 
     println!("Hello world!");
 
