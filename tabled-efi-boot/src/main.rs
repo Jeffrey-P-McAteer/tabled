@@ -48,17 +48,6 @@ fn main(image_handle: Handle, mut system_table: SystemTable<Boot>) -> Status {
     println!("Hello world!");
     bs.stall(1_000_000);
 
-    print!("Starting graphics in ");
-    for s in (1..4).rev() {
-      print!("{}", s);
-      for d in 0..3 {
-        print!(".");
-        bs.stall(1_000_000 / 3);
-      }
-    }
-    println!("");
-    bs.stall(1_000_000);
-
     // Graphics!
     if let Ok(handle) = bs.get_handle_for_protocol::<GraphicsOutput>() {
       let gop = unsafe {
@@ -77,18 +66,49 @@ fn main(image_handle: Handle, mut system_table: SystemTable<Boot>) -> Status {
         .expect("failed to open Graphics Output Protocol")
       };
       
-      // Todo steal more from https://github.com/rust-osdev/uefi-rs/blob/02e02d4018ad2c3cd6312dd76cfe1db51d466b26/uefi-test-runner/src/proto/console/gop.rs
+      // Pick largest resolution
+      let mut largest_mode = None;
+      let mut ideal_mode = None;
+      
+      let mut largest_w = 0;
+      let mut largest_h = 0;
 
-      // set_graphics_mode(gop);
-      // fill_color(gop);
-      // draw_fb(gop);
+      for mode in gop.modes() {
+        let (mode_w, mode_h) = mode.info().resolution();
+        println!("mode = {},{}", mode_w, mode_h);
+        if mode_w == 1024 && mode_h == 768 {
+          ideal_mode = Some(mode);
+        }
+        else if mode_w * mode_h > largest_w * largest_h {
+          largest_mode = Some(mode);
+          largest_w = mode_w;
+          largest_h = mode_h;
+        }
+      }
+
+      println!("largest mode = {},{}", largest_w, largest_h);
+      
+      if let Some(mode) = ideal_mode {
+        gop.set_mode(&mode).expect("Failed to set graphics mode");
+      }
+      else if let Some(mode) = largest_mode {
+        gop.set_mode(&mode).expect("Failed to set graphics mode");
+      }
+      else {
+        println!("No graphics modes/resolutions on this machine!");
+      }
+
+      // Track mouse cursor & paint pixels
+      println!("Done!");
+      
+
     }
     else {
       println!("No graphics support on this machine!");
     }
 
-
     println!("Done!");
+
     bs.stall(99_000_000);
 
     Status::SUCCESS
