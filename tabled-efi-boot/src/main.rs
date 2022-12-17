@@ -1,6 +1,7 @@
 #![no_main]
 #![no_std]
 #![feature(abi_efiapi)]
+#![feature(negative_impls)]
 
 //use log::info;
 
@@ -8,8 +9,15 @@ use uefi::prelude::*;
 
 use uefi::proto::console::gop::{BltOp, BltPixel, FrameBuffer, GraphicsOutput, PixelFormat};
 use uefi::table::boot::{BootServices, OpenProtocolAttributes, OpenProtocolParams};
+use uefi::{proto::Protocol, unsafe_guid};
 
 use uefi_services::{println, print};
+
+#[unsafe_guid("31878C87-0B75-11D5-9A4F-0090273FC14D")]
+#[derive(Protocol)]
+struct TabledEfiMouseProtocol {
+
+}
 
 
 #[entry]
@@ -98,8 +106,32 @@ fn main(image_handle: Handle, mut system_table: SystemTable<Boot>) -> Status {
         println!("No graphics modes/resolutions on this machine!");
       }
 
-      // Track mouse cursor & paint pixels
       println!("Done!");
+      
+      // Track mouse cursor & paint pixels
+
+/*
+  #define EFI_SIMPLE_POINTER_PROTOCOL_GUID \
+  { \
+    0x31878c87, 0xb75, 0x11d5, {0x9a, 0x4f, 0x0, 0x90, 0x27, 0x3f, 0xc1, 0x4d } \
+  }
+*/    
+      //  See https://github.com/Sentinel-One/efi_fuzz/blob/master/guids.csv
+      //let EfiSimplePointerProtocolGuid = "EfiSimplePointerProtocolGuid";
+      //let EfiSimplePointerProtocolGuid = guid!("31878C87-0B75-11D5-9A4F-0090273FC14D");
+
+      match bs.open_protocol_exclusive::<TabledEfiMouseProtocol>(image_handle) {
+        Ok(mouse_protocol) => {
+          println!("Got mouse protocol!");
+          
+
+
+        }
+        Err(e) => {
+          println!("Could not open mouse protocol!: e={:?}", e);
+        }
+      }
+
       
 
     }
