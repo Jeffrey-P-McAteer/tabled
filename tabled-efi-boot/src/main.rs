@@ -54,7 +54,7 @@ fn main(image_handle: Handle, mut system_table: SystemTable<Boot>) -> Status {
     println!("RAM> entry_size={}, map_size={} ", mm.entry_size, mm.map_size);
 
     println!("Hello world!");
-    bs.stall(1_000_000);
+    bs.stall(4_000_000);
 
     // Graphics!
     if let Ok(handle) = bs.get_handle_for_protocol::<GraphicsOutput>() {
